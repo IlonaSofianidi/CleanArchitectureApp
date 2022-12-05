@@ -6,4 +6,10 @@
     <string name="action">Action</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
+
+    <string name="notification_channel_low">Innovecs Test Assignment Notification low</string>
+    <string name="notification_button_id">Innovecs Test Assignment Button Action</string>
+
+    <string name="notification_title">Action is Notification!</string>
+    <string name="toast_title">Action is Toast!</string>
 </resources>

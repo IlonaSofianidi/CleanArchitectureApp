@@ -5,7 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.innovecs.testassignment.R
+import com.innovecs.testassignment.core.NotificationType
+import com.innovecs.testassignment.core.Notifications
 import com.innovecs.testassignment.databinding.FragmentFirstBinding
 import com.innovecs.testassignment.presentation.home.model.ActionType
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -59,11 +63,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun showToast() {
-        TODO("Not yet implemented")
+        //TODO Add network check
+        //TODO Move to string resources
+        Toast.makeText(context, "Action is TOAST", Toast.LENGTH_LONG).show()
     }
 
     private fun displayNotification() {
-        TODO("Not yet implemented")
+        context?.let {
+            Notifications.showNotification(
+                context = it,
+                contentTitle = getString(R.string.notification_title),
+                contentText = getString(R.string.notification_title),
+                notificationId = R.id.notification_button_id,
+                type = NotificationType.NOTIFICATION_LOW
+            )
+        }
     }
 
     private fun callContacts() {
