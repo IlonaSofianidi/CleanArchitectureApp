@@ -85,7 +85,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun showAnimation() {
-        binding.buttonAction.animate().rotation(360F).duration = ANIMATION_DURATION
+        binding.buttonAction.apply {
+            rotation = 0f
+            animate().rotation(ANIMATION_ANGLE)
+        }
     }
 
     override fun onDestroyView() {
@@ -95,6 +98,6 @@ class HomeFragment : Fragment() {
 
     private companion object {
         private const val TAG = "HomeFragment"
-        private const val ANIMATION_DURATION = 3000L
+        private const val ANIMATION_ANGLE = 360f
     }
 }

@@ -9,6 +9,7 @@ import com.innovecs.testassignment.domain.usecase.GetActionsUseCase
 import com.innovecs.testassignment.presentation.home.mapping.ActionDataMapper
 import com.innovecs.testassignment.presentation.home.model.ActionUI
 import kotlinx.coroutines.launch
+import java.util.*
 
 class HomeViewModel(private val getActionsUseCase: GetActionsUseCase) : ViewModel() {
 
@@ -26,10 +27,16 @@ class HomeViewModel(private val getActionsUseCase: GetActionsUseCase) : ViewMode
     fun retrieveAction() {
         showLoading()
         viewModelScope.launch {
-            val actions = getActionsUseCase.execute()
-            val filteredActions = filterInvalidActions(actions)
-            val currentAction = filteredActions?.minByOrNull { it.priority ?: DEFAULT_PRIORITY }
-            _action.postValue(ActionDataMapper().convertNullable(currentAction))
+            kotlin.runCatching {
+                val actions = getActionsUseCase.execute()
+                val filteredActions = filterInvalidActions(actions)
+                val currentAction = filteredActions?.minByOrNull { it.priority ?: DEFAULT_PRIORITY }
+                ActionDataMapper().convertNullable(currentAction)
+            }.onSuccess {
+                _action.postValue(it)
+            }.onFailure {
+                _error.postValue(it.message)
+            }
             hideLoading()
         }
     }
@@ -47,10 +54,14 @@ class HomeViewModel(private val getActionsUseCase: GetActionsUseCase) : ViewMode
     }
 
     private fun isValidAction(action: Action): Boolean {
-        return action.enabled == true
+        val day = Calendar.getInstance().run {
+            get(Calendar.DAY_OF_WEEK)
+        }
+        return action.enabled == true && action.validDays?.contains(day - DAY_DIFF) == true
     }
 
     companion object {
         private const val DEFAULT_PRIORITY = -1
+        private const val DAY_DIFF = 1
     }
 }

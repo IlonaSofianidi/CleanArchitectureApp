@@ -2,15 +2,15 @@ package com.innovecs.testassignment.data.source.remote
 
 import com.innovecs.testassignment.data.source.ActionsDataSource
 import com.innovecs.testassignment.data.source.model.ActionModel
+import com.innovecs.testassignment.data.source.remote.api.ActionsApi
 import com.innovecs.testassignment.data.source.remote.mapping.ActionResponseDataMapper
-import com.innovecs.testassignment.data.source.remote.model.ActionResponse
 
-class ActionsRemoteDataSource : ActionsDataSource {
+class ActionsRemoteDataSource(private val actionsApi: ActionsApi) : ActionsDataSource {
 
     override suspend fun getActions(): List<ActionModel>? =
-        ActionResponseDataMapper().convertListNullable(getMockedData())
+        ActionResponseDataMapper().convertListNullable(getActionsFromAPI())
 
 
-    private fun getMockedData() =
-        listOf(ActionResponse("toast", true, 1, valid_days = null, cool_down = 3434))
+    private suspend fun getActionsFromAPI() =
+        actionsApi.getActions()
 }
