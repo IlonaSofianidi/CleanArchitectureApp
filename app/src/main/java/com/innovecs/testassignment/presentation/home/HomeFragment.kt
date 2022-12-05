@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.innovecs.testassignment.R
 import com.innovecs.testassignment.core.NotificationType
 import com.innovecs.testassignment.core.Notifications
+import com.innovecs.testassignment.core.isConnected
 import com.innovecs.testassignment.databinding.FragmentFirstBinding
 import com.innovecs.testassignment.presentation.home.model.ActionType
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -50,7 +51,7 @@ class HomeFragment : Fragment() {
         viewModel.action.observe(viewLifecycleOwner) { actionUI ->
             Log.d(TAG, "subscribeToButtonAction: action retrieved $actionUI")
             when (actionUI?.actionType) {
-                ActionType.TOAST -> showToast()
+                ActionType.TOAST -> showToastIfNeeded()
                 ActionType.NOTIFICATION -> displayNotification()
                 ActionType.CALL -> callContacts()
                 ActionType.ANIMATION -> showAnimation()
@@ -62,13 +63,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showToast() {
-        //TODO Add network check
-        //TODO Move to string resources
-        Toast.makeText(context, "Action is TOAST", Toast.LENGTH_LONG).show()
+    private fun showToastIfNeeded() {
+        if (context?.isConnected() == false) return
+        Toast.makeText(context, getString(R.string.toast_title), Toast.LENGTH_LONG).show()
     }
 
     private fun displayNotification() {
+        //TODO Add contacts picker to notification
         context?.let {
             Notifications.showNotification(
                 context = it,
